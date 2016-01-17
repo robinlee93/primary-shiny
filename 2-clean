@@ -1,0 +1,21 @@
+#this turns poll data into weekly
+
+source("1-getpollavg.R")
+
+gop_primary_pollavg_2015 <- gop_primary_pollavg %>% filter(date>"2014-12-31"&date<"2016-01-01")
+dem_primary_pollavg_2015 <- dem_primary_pollavg %>% filter(date>"2014-12-31"&date<"2016-01-01")
+
+library(lubridate)
+gop_primary_pollavg_2015$week <- week(gop_primary_pollavg_2015$date)
+dem_primary_pollavg_2015$week <- week(dem_primary_pollavg_2015$date)
+
+gop_week <- gop_primary_pollavg_2015 %>%
+  group_by(choice,week) %>%
+  summarize(mean(value))
+
+dem_week <- dem_primary_pollavg_2015 %>%
+  group_by(choice,week) %>%
+  summarize(mean(value))
+
+write.csv(gop_week, "2016-gop-week-2015.csv")
+write.csv(dem_week, "2016-dem-week-2015.csv")
